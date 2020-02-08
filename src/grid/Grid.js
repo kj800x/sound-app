@@ -4,12 +4,16 @@ import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
 
 const Grid = ({ scene }) => {
-  const [zoomRaw, setZoomRaw] = useState(Math.log(100));
+  // In ln(pixel coords)
+  const [zoomRaw, setZoomRaw] = useState(Math.log(10));
+  // In grid coords
   const [xOffset, setXOffset] = useState(0);
   const [yOffset, setYOffset] = useState(0);
+  // In pixel coords
   const [mouseLoc, setMouseLoc] = useState(undefined);
   const gridRef = useRef();
 
+  // In pixel coords
   const zoom = Math.exp(zoomRaw);
 
   const mtog = (x, y) => {
@@ -27,14 +31,25 @@ const Grid = ({ scene }) => {
   // };
 
   const handleMouseMove = ({ movementX, movementY }) => {
-    setXOffset(xOffset + movementX);
-    setYOffset(yOffset + movementY);
+    setXOffset(xOffset + movementX / zoom);
+    setYOffset(yOffset + movementY / zoom);
   };
 
   const gmEvents = useGlobalMouse(handleMouseMove);
 
   const handleMouseScroll = ({ deltaY, ...e }) => {
-    setZoomRaw(zoomRaw + deltaY * 0.01);
+    const rect = gridRef.current.getBoundingClientRect();
+    const deltaZoomRaw = deltaY * 0.001;
+    const newZoom = Math.exp(zoomRaw + deltaZoomRaw);
+    const zoomFactor = newZoom / zoom;
+    setZoomRaw(zoomRaw + deltaZoomRaw);
+    const x = e.pageX - rect.left;
+    const y = e.pageY - rect.top;
+    const dx = x * (1 - zoomFactor);
+    const dy = y * (1 - zoomFactor);
+    setXOffset(xOffset + dx / zoom);
+    setYOffset(yOffset + dy / zoom);
+
     // setXOffset(xOffset + xPxl * (1 - zoom));
     // setYOffset(yOffset + yPxl * (1 - zoom));
   };

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import GridDots from "./GridDots";
 import useGlobalMouse from "./useGlobalMouse";
+import SceneObjects from "./SceneObjects";
 
-const Grid = () => {
+const Grid = ({ scene }) => {
   const [zoomRaw, setZoom] = useState(Math.log(100));
   const [xOffset, setXOffset] = useState(0);
   const [yOffset, setYOffset] = useState(0);
   const zoom = Math.exp(zoomRaw);
 
   const handleMouseMove = ({ movementX, movementY }) => {
-    setXOffset(xOffset - movementX);
-    setYOffset(yOffset - movementY);
+    setXOffset(xOffset + movementX);
+    setYOffset(yOffset + movementY);
   };
 
   const [onMouseDown] = useGlobalMouse(handleMouseMove);
@@ -28,6 +29,7 @@ const Grid = () => {
         y={yOffset}
         zoom={zoom}
       />
+      <SceneObjects scene={scene} />
     </div>
   );
 };

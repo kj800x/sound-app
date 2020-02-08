@@ -26,20 +26,6 @@ code {
   height: 800px;
 }
 
-.vertBar {
-  position: absolute;
-  border-left: 1px dashed black;
-  height: 100%;
-  width: 1px;
-}
-
-.horizBar {
-  position: absolute;
-  border-top: 1px dashed black;
-  height: 1px;
-  width: 100%;
-}
-
 .grid-dot {
   position: absolute;
   width: 3px;

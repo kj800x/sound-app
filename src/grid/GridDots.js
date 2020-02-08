@@ -16,7 +16,7 @@ const GridDots = ({ xMin, yMin, xMax, yMax, x, y, zoom }) => {
   return (
     <div
       className="dots-container"
-      style={{ position: "absolute", top: -y, left: -x }}
+      style={{ position: "absolute", top: y, left: x }}
     >
       {dots}
     </div>

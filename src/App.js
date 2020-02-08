@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <div className="grid-container">
-        <Grid width={500} height={500} zoom={1} xOffset={0} yOffset={0} />
+        <Grid />
       </div>
     </div>
   );

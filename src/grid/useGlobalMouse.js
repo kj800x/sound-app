@@ -20,7 +20,7 @@ function useGlobalMouse(handleMouseMove) {
     }
   }, [mouseDown, handleMouseMove]);
 
-  return [() => setMouseDown(true)];
+  return { onMouseDown: () => setMouseDown(true) };
 }
 
 export default useGlobalMouse;

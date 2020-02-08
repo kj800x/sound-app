@@ -19,6 +19,8 @@ code {
   background-color: lightblue;
   position: relative;
   overflow: hidden;
+  margin-left: 20px;
+  margin-top: 30px;
 }
 
 .grid-container {

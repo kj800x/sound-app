@@ -19,8 +19,8 @@ code {
   background-color: lightblue;
   position: relative;
   overflow: hidden;
-  margin-left: 20px;
-  margin-top: 30px;
+  /* margin-left: 20px;
+  margin-top: 30px; */
 }
 
 .grid-container {
@@ -34,4 +34,11 @@ code {
   height: 3px;
   background: black;
   border-radius: 4px;
+}
+
+.scene-object {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: blue;
 }

@@ -5,7 +5,7 @@ import SceneObjects from "./SceneObjects";
 
 const Grid = ({ scene }) => {
   // In ln(pixel coords)
-  const [zoomRaw, setZoomRaw] = useState(Math.log(10));
+  const [zoomRaw, setZoomRaw] = useState(Math.log(70));
   // In grid coords
   const [xOffset, setXOffset] = useState(0);
   const [yOffset, setYOffset] = useState(0);
@@ -16,19 +16,21 @@ const Grid = ({ scene }) => {
   // In pixel coords
   const zoom = Math.exp(zoomRaw);
 
-  const mtog = (x, y) => {
-    const rect = gridRef.current.getBoundingClientRect();
-    const xPxl = x - rect.left;
-    const yPxl = y - rect.top;
-    return [(xPxl - xOffset) / zoom, (yPxl - yOffset) / zoom];
-  };
-
-  // const gtom = (x, y) => {
+  // const mtog = (x, y) => {
   //   const rect = gridRef.current.getBoundingClientRect();
-  //   const xPxl = x * zoom + xOffset + rect.left;
-  //   const yPxl = y * zoom + yOffset + rect.top;
-  //   return [xPxl, yPxl];
+  //   const xPxl = x - rect.left;
+  //   const yPxl = y - rect.top;
+  //   return [(xPxl - xOffset) / zoom, (yPxl - yOffset) / zoom];
   // };
+
+  const gtom = (x, y) => {
+    // const rect = gridRef.current
+    //   ? gridRef.current.getBoundingClientRect()
+    //   : { left: 0, top: 0 };
+    const xPxl = (x + xOffset) * zoom;
+    const yPxl = (y + yOffset) * zoom;
+    return [xPxl, yPxl];
+  };
 
   const handleMouseMove = ({ movementX, movementY }) => {
     setXOffset(xOffset + movementX / zoom);
@@ -72,16 +74,15 @@ const Grid = ({ scene }) => {
           y={yOffset}
           zoom={zoom}
         />
-        <SceneObjects scene={scene} />
+        <SceneObjects gtom={gtom} scene={scene} />
       </div>
       {mouseLoc &&
         (() => {
-          const pos = mtog(mouseLoc[1], mouseLoc[2], mouseLoc[0]);
           return (
             <div>
-              X: {mouseLoc[1]} [{pos[0]}]
+              X: {mouseLoc[1]}
               <br />
-              Y: {mouseLoc[2]} [{pos[1]}]
+              Y: {mouseLoc[2]}
               <br />
               xOffset: {xOffset}
               <br />

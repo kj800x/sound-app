@@ -5,13 +5,13 @@ import classnames from "classnames";
 const getSceneObjectsFromSceneGraph = graph => graph;
 
 const SceneObject = ({ object, gtom, zoom, onSelect }) => {
-  const [x, y] = gtom(object.x, object.y);
+  const [x, y] = gtom(-object.x, -object.y);
   return (
     <div
       className={classnames("scene-object", object.type)}
       style={{
-        top: y,
-        left: x,
+        top: -y,
+        left: -x,
         width: zoom,
         height: zoom,
         outline: object.selected ? "3px solid orange" : "none"
@@ -20,6 +20,13 @@ const SceneObject = ({ object, gtom, zoom, onSelect }) => {
       onMouseDown={e => {
         e.stopPropagation();
       }}
+      onDragStart={e => {
+        const rect = e.target.getBoundingClientRect();
+        e.dataTransfer.setData("id", object.id);
+        e.dataTransfer.setData("mousePosX", e.pageX - rect.left);
+        e.dataTransfer.setData("mousePosY", e.pageY - rect.top);
+      }}
+      id={object.id}
       onClick={e => {
         e.stopPropagation();
         onSelect(object.id);

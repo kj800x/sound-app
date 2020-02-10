@@ -3,7 +3,7 @@ import GridDots from "./GridDots";
 import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
 
-const Grid = ({ scene, onSelect }) => {
+const Grid = ({ scene, onSelect, onDrop }) => {
   // In ln(pixel coords)
   const [zoomRaw, setZoomRaw] = useState(Math.log(70));
   // In grid coords
@@ -16,25 +16,25 @@ const Grid = ({ scene, onSelect }) => {
   // In pixel coords
   const zoom = Math.exp(zoomRaw);
 
-  // const mtog = (x, y) => {
-  //   const rect = gridRef.current.getBoundingClientRect();
-  //   const xPxl = x - rect.left;
-  //   const yPxl = y - rect.top;
-  //   return [(xPxl - xOffset) / zoom, (yPxl - yOffset) / zoom];
-  // };
+  const mtog = (x, y) => {
+    const rect = gridRef.current.getBoundingClientRect();
+    // console.log([x, y]);
+    // console.log([xOffset + x / zoom, yOffset + y / zoom]);
+    return [xOffset + x / zoom, yOffset + y / zoom];
+  };
 
   const gtom = (x, y) => {
-    // const rect = gridRef.current
-    //   ? gridRef.current.getBoundingClientRect()
-    //   : { left: 0, top: 0 };
+    const rect = gridRef.current
+      ? gridRef.current.getBoundingClientRect()
+      : { left: 0, top: 0 };
     const xPxl = (x + xOffset) * zoom;
     const yPxl = (y + yOffset) * zoom;
     return [xPxl, yPxl];
   };
 
   const handleMouseMove = ({ movementX, movementY }) => {
-    setXOffset(xOffset + movementX / zoom);
-    setYOffset(yOffset + movementY / zoom);
+    setXOffset(xOffset - movementX / zoom);
+    setYOffset(yOffset - movementY / zoom);
   };
 
   const gmEvents = useGlobalMouse(handleMouseMove);
@@ -49,8 +49,8 @@ const Grid = ({ scene, onSelect }) => {
     const y = e.pageY - rect.top;
     const dx = x * (1 - zoomFactor);
     const dy = y * (1 - zoomFactor);
-    setXOffset(xOffset + dx / zoom);
-    setYOffset(yOffset + dy / zoom);
+    setXOffset(xOffset - dx / zoom);
+    setYOffset(yOffset - dy / zoom);
   };
 
   return (
@@ -59,9 +59,22 @@ const Grid = ({ scene, onSelect }) => {
         ref={gridRef}
         className="grid"
         onWheel={handleMouseScroll}
-        onMouseMove={e => setMouseLoc([e.target, e.pageX, e.pageY])}
-        onClick={e => onSelect(undefined)}
+        onMouseMove={e => setMouseLoc([e.pageX, e.pageY])}
+        onClick={() => onSelect(undefined)}
         {...gmEvents}
+        onDragOver={e => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        onDrop={e => {
+          onDrop(
+            e.dataTransfer.getData("id"),
+            mtog(
+              e.pageX - e.dataTransfer.getData("mousePosX"),
+              e.pageY - e.dataTransfer.getData("mousePosY")
+            )
+          );
+        }}
       >
         <GridDots
           xMin={-10}
@@ -81,11 +94,12 @@ const Grid = ({ scene, onSelect }) => {
       </div>
       {mouseLoc &&
         (() => {
+          const xy = mtog(mouseLoc[0], mouseLoc[1]);
           return (
             <div>
-              X: {mouseLoc[1]}
+              X: {mouseLoc[0]} [{xy[0]}]
               <br />
-              Y: {mouseLoc[2]}
+              Y: {mouseLoc[1]} [{xy[1]}]
               <br />
               xOffset: {xOffset}
               <br />

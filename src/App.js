@@ -26,6 +26,20 @@ const reducer = (state, action) => {
         selected: obj.id === action.payload.id
       }));
     }
+    case "MOVE": {
+      console.log(action.payload);
+      return state.map(obj => {
+        if (obj.id === action.payload.id) {
+          return {
+            ...obj,
+            x: action.payload.pos[0],
+            y: action.payload.pos[1]
+          };
+        } else {
+          return obj;
+        }
+      });
+    }
     default: {
       return state;
     }
@@ -35,12 +49,15 @@ const reducer = (state, action) => {
 function App() {
   const [scene, dispatch] = useReducer(reducer, INITIAL_SCENE);
 
+  console.log(scene);
+
   return (
     <div className="App">
       <div className="grid-container">
         <Grid
           scene={scene}
           onSelect={id => dispatch({ type: "SELECT", payload: { id } })}
+          onDrop={(id, pos) => dispatch({ type: "MOVE", payload: { id, pos } })}
         />
       </div>
     </div>

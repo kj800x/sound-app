@@ -16,17 +16,14 @@ const Grid = ({ scene, onSelect, onDrop }) => {
   // In pixel coords
   const zoom = Math.exp(zoomRaw);
 
+  // Page mouse pixel coords to grid coords
   const mtog = (x, y) => {
     const rect = gridRef.current.getBoundingClientRect();
-    // console.log([x, y]);
-    // console.log([xOffset + x / zoom, yOffset + y / zoom]);
-    return [xOffset + x / zoom, yOffset + y / zoom];
+    return [xOffset + (x - rect.left) / zoom, yOffset + (y - rect.top) / zoom];
   };
 
+  // Grid coords to grid pixel coords (not page)
   const gtom = (x, y) => {
-    const rect = gridRef.current
-      ? gridRef.current.getBoundingClientRect()
-      : { left: 0, top: 0 };
     const xPxl = (x + xOffset) * zoom;
     const yPxl = (y + yOffset) * zoom;
     return [xPxl, yPxl];

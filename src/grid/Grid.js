@@ -3,7 +3,7 @@ import GridDots from "./GridDots";
 import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
 
-const Grid = ({ scene }) => {
+const Grid = ({ scene, onSelect }) => {
   // In ln(pixel coords)
   const [zoomRaw, setZoomRaw] = useState(Math.log(70));
   // In grid coords
@@ -51,9 +51,6 @@ const Grid = ({ scene }) => {
     const dy = y * (1 - zoomFactor);
     setXOffset(xOffset + dx / zoom);
     setYOffset(yOffset + dy / zoom);
-
-    // setXOffset(xOffset + xPxl * (1 - zoom));
-    // setYOffset(yOffset + yPxl * (1 - zoom));
   };
 
   return (
@@ -63,18 +60,24 @@ const Grid = ({ scene }) => {
         className="grid"
         onWheel={handleMouseScroll}
         onMouseMove={e => setMouseLoc([e.target, e.pageX, e.pageY])}
+        onClick={e => onSelect(undefined)}
         {...gmEvents}
       >
         <GridDots
-          xMin={-20}
-          xMax={20}
-          yMin={-20}
-          yMax={20}
+          xMin={-10}
+          xMax={10}
+          yMin={-10}
+          yMax={10}
           x={xOffset}
           y={yOffset}
           zoom={zoom}
         />
-        <SceneObjects gtom={gtom} scene={scene} />
+        <SceneObjects
+          gtom={gtom}
+          scene={scene}
+          zoom={zoom}
+          onSelect={onSelect}
+        />
       </div>
       {mouseLoc &&
         (() => {

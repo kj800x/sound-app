@@ -38,7 +38,7 @@ const Grid = ({ scene, onSelect, onDrop }) => {
 
   const handleMouseScroll = ({ deltaY, ...e }) => {
     const rect = gridRef.current.getBoundingClientRect();
-    const deltaZoomRaw = deltaY * 0.001;
+    const deltaZoomRaw = deltaY * -0.001;
     const newZoom = Math.exp(zoomRaw + deltaZoomRaw);
     const zoomFactor = newZoom / zoom;
     setZoomRaw(zoomRaw + deltaZoomRaw);

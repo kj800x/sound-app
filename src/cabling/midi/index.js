@@ -1,4 +1,5 @@
 export default {
   type: "midi",
-  label: "MIDI"
+  label: "MIDI",
+  color: "#555f81"
 };

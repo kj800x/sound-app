@@ -84,6 +84,7 @@ function App() {
         onDrop={(object, pos) =>
           dispatch({ type: "MOVE", payload: { id: object.id, pos, object } })
         }
+        selectedCableType={selectedCable}
       />
       <ItemEditor item={selectedItem} />
       <Toolbox selectedCable={selectedCable} onSelect={setSelectedCable} />

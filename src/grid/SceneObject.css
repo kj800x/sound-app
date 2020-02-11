@@ -8,3 +8,12 @@
 .scene-object.selected {
   outline: 3px solid orange;
 }
+
+.cable-connector {
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  border-radius: 100%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

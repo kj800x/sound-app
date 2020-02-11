@@ -21,22 +21,27 @@ function ToolboxItem({ equipmentType }) {
   );
 }
 
-function CableItem({ cableType }) {
+function CableItem({ cableType, onSelect, selected }) {
   return (
     <div className="toolbox-item-container">
-      <CableSpool type={cableType} />
+      <CableSpool type={cableType} onSelect={onSelect} selected={selected} />
     </div>
   );
 }
 
-function Toolbox() {
+function Toolbox({ onSelect, selectedCable }) {
   return (
     <div className="toolbox">
       {equipmentList.map(equipment => (
         <ToolboxItem equipmentType={equipment.type} key={equipment.type} />
       ))}
       {cablingList.map(cable => (
-        <CableItem cableType={cable.type} key={cable.type} />
+        <CableItem
+          cableType={cable.type}
+          key={cable.type}
+          selected={selectedCable === cable.type}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );

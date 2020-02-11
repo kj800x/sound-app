@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import "./App.css";
 
 import classNames from "classnames";
@@ -72,6 +72,7 @@ const reducer = (state, action) => {
 
 function App() {
   const [scene, dispatch] = useReducer(reducer, INITIAL_SCENE);
+  const [selectedCable, setSelectedCable] = useState(undefined);
 
   const selectedItem = getSelectedItem(scene);
 
@@ -85,7 +86,7 @@ function App() {
         }
       />
       <ItemEditor item={selectedItem} />
-      <Toolbox />
+      <Toolbox selectedCable={selectedCable} onSelect={setSelectedCable} />
     </div>
   );
 }

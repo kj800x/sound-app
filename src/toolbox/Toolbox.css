@@ -1,8 +1,10 @@
 .toolbox-item-container {
   position: relative;
-  min-width: 70px;
-  min-height: 70px;
+  width: 70px;
+  height: 70px;
   display: block;
+  margin-left: 20px;
+  margin-top: 3px;
 }
 
 .toolbox {

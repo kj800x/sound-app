@@ -4,7 +4,7 @@ import classnames from "classnames";
 // Right now the graphs are very basic
 const getSceneObjectsFromSceneGraph = graph => graph;
 
-const SceneObject = ({ object, gtom, zoom, onSelect }) => {
+export const SceneObject = ({ object, gtom, zoom, onSelect }) => {
   const [x, y] = gtom(-object.x, -object.y);
   return (
     <div
@@ -22,7 +22,7 @@ const SceneObject = ({ object, gtom, zoom, onSelect }) => {
       }}
       onDragStart={e => {
         const rect = e.target.getBoundingClientRect();
-        e.dataTransfer.setData("id", object.id);
+        e.dataTransfer.setData("object", JSON.stringify(object));
         e.dataTransfer.setData("mousePosX", e.pageX - rect.left);
         e.dataTransfer.setData("mousePosY", e.pageY - rect.top);
       }}

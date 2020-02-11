@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import "./App.css";
 
 import Grid from "./grid/Grid";
+import Toolbox from "./toolbox/Toolbox";
 
 const INITIAL_SCENE = [
   {
@@ -18,6 +19,10 @@ const INITIAL_SCENE = [
   }
 ];
 
+const nextId = state => {
+  return state.reduce((acc, obj) => (acc > obj.id ? acc : obj.id), 0) + 1;
+};
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "SELECT": {
@@ -27,18 +32,30 @@ const reducer = (state, action) => {
       }));
     }
     case "MOVE": {
-      console.log(action.payload);
-      return state.map(obj => {
-        if (obj.id === action.payload.id) {
-          return {
-            ...obj,
+      if (action.payload.id === "__NEW__") {
+        console.log(action.payload.object);
+        return [
+          ...state,
+          {
+            ...action.payload.object,
+            id: nextId(state),
             x: action.payload.pos[0],
             y: action.payload.pos[1]
-          };
-        } else {
-          return obj;
-        }
-      });
+          }
+        ];
+      } else {
+        return state.map(obj => {
+          if (obj.id === action.payload.id) {
+            return {
+              ...obj,
+              x: action.payload.pos[0],
+              y: action.payload.pos[1]
+            };
+          } else {
+            return obj;
+          }
+        });
+      }
     }
     default: {
       return state;
@@ -57,9 +74,12 @@ function App() {
         <Grid
           scene={scene}
           onSelect={id => dispatch({ type: "SELECT", payload: { id } })}
-          onDrop={(id, pos) => dispatch({ type: "MOVE", payload: { id, pos } })}
+          onDrop={(object, pos) =>
+            dispatch({ type: "MOVE", payload: { id: object.id, pos, object } })
+          }
         />
       </div>
+      <Toolbox />
     </div>
   );
 }

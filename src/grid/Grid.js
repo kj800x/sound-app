@@ -64,8 +64,9 @@ const Grid = ({ scene, onSelect, onDrop }) => {
           e.preventDefault();
         }}
         onDrop={e => {
+          const object = JSON.parse(e.dataTransfer.getData("object"));
           onDrop(
-            e.dataTransfer.getData("id"),
+            object,
             mtog(
               e.pageX - e.dataTransfer.getData("mousePosX"),
               e.pageY - e.dataTransfer.getData("mousePosY")

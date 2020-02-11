@@ -19,8 +19,6 @@ code {
   background-color: lightblue;
   position: relative;
   overflow: hidden;
-  margin-left: 20px;
-  margin-top: 30px;
 }
 
 .grid-container {
@@ -32,7 +30,7 @@ code {
   position: absolute;
   width: 3px;
   height: 3px;
-  background: black;
+  background: rgba(1, 1, 1, 0.4);
   border-radius: 4px;
 }
 
@@ -40,5 +38,28 @@ code {
   position: absolute;
   width: 30px;
   height: 30px;
-  background: blue;
+  background-size: contain !important;
+}
+
+.App {
+  display: flex;
+}
+
+.toolbox-item-container {
+  position: relative;
+  min-width: 70px;
+  min-height: 70px;
+  display: block;
+}
+
+.mixer {
+  background: url(./icons/mixer.png);
+}
+
+.speaker {
+  background: url(./icons/speaker.png);
+}
+
+.microphone {
+  background: url(./icons/microphone.svg);
 }

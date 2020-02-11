@@ -1,4 +1,5 @@
 import React from "react";
+import "./GridDot.css";
 
 const GridDot = ({ x, y }) => (
   <div className="grid-dot" style={{ top: y, left: x }} />

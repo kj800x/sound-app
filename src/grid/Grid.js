@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import GridDots from "./GridDots";
 import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
+import "./Grid.css";
 
 const Grid = ({ scene, onSelect, onDrop }) => {
   // In ln(pixel coords)
@@ -9,8 +10,6 @@ const Grid = ({ scene, onSelect, onDrop }) => {
   // In grid coords
   const [xOffset, setXOffset] = useState(0);
   const [yOffset, setYOffset] = useState(0);
-  // In pixel coords
-  const [mouseLoc, setMouseLoc] = useState(undefined);
   const gridRef = useRef();
 
   // In pixel coords
@@ -51,12 +50,11 @@ const Grid = ({ scene, onSelect, onDrop }) => {
   };
 
   return (
-    <>
+    <div className="grid-container">
       <div
         ref={gridRef}
         className="grid"
         onWheel={handleMouseScroll}
-        onMouseMove={e => setMouseLoc([e.pageX, e.pageY])}
         onClick={() => onSelect(undefined)}
         {...gmEvents}
         onDragOver={e => {
@@ -90,24 +88,7 @@ const Grid = ({ scene, onSelect, onDrop }) => {
           onSelect={onSelect}
         />
       </div>
-      {mouseLoc &&
-        (() => {
-          const xy = mtog(mouseLoc[0], mouseLoc[1]);
-          return (
-            <div>
-              X: {mouseLoc[0]} [{xy[0]}]
-              <br />
-              Y: {mouseLoc[1]} [{xy[1]}]
-              <br />
-              xOffset: {xOffset}
-              <br />
-              yOffset: {yOffset}
-              <br />
-              zoom: {zoom} [{zoomRaw}]
-            </div>
-          );
-        })()}
-    </>
+    </div>
   );
 };
 

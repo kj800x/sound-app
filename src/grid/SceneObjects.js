@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import "./SceneObject.css";
 
 // Right now the graphs are very basic
 const getSceneObjectsFromSceneGraph = graph => graph;
@@ -8,13 +9,14 @@ export const SceneObject = ({ object, gtom, zoom, onSelect }) => {
   const [x, y] = gtom(-object.x, -object.y);
   return (
     <div
-      className={classnames("scene-object", object.type)}
+      className={classnames("scene-object", object.type, {
+        selected: object.selected
+      })}
       style={{
         top: -y,
         left: -x,
         width: zoom,
-        height: zoom,
-        outline: object.selected ? "3px solid orange" : "none"
+        height: zoom
       }}
       draggable={true}
       onMouseDown={e => {
@@ -26,7 +28,6 @@ export const SceneObject = ({ object, gtom, zoom, onSelect }) => {
         e.dataTransfer.setData("mousePosX", e.pageX - rect.left);
         e.dataTransfer.setData("mousePosY", e.pageY - rect.top);
       }}
-      id={object.id}
       onClick={e => {
         e.stopPropagation();
         onSelect(object.id);

@@ -7,8 +7,18 @@ import cabling from "../cabling";
 // Right now the graphs are very basic
 const getSceneObjectsFromSceneGraph = graph => graph;
 
-function Connector({ cableType, connectorLocation, zoom }) {
-  const cableSkel = cabling.find(cable => cable.type === cableType);
+function Connector({ connectorDetails, selectedCableType, zoom }) {
+  const showConnector = Object.values(connectorDetails.connectors).includes(
+    selectedCableType
+  );
+
+  if (!showConnector) {
+    return null;
+  }
+
+  const connectorLocation = connectorDetails.location;
+
+  const cableSkel = cabling.find(cable => cable.type === selectedCableType);
 
   return (
     <div
@@ -32,10 +42,6 @@ export const SceneObject = ({
   selectedCableType
 }) => {
   const skel = equipmentList.find(e => e.type === object.type);
-
-  const showConnector = Object.values(skel.connectors).includes(
-    selectedCableType
-  );
 
   const [x, y] = gtom(-object.x, -object.y);
   return (
@@ -64,13 +70,14 @@ export const SceneObject = ({
         onSelect(object.id);
       }}
     >
-      {showConnector && (
+      {skel.connectors.map((connector, i) => (
         <Connector
-          connectorLocation={skel.connectorLocation}
+          key={i}
           zoom={zoom}
-          cableType={selectedCableType}
+          selectedCableType={selectedCableType}
+          connectorDetails={connector}
         />
-      )}
+      ))}
     </div>
   );
 };

@@ -29,9 +29,19 @@ function CableItem({ cableType, onSelect, selected }) {
   );
 }
 
-function Toolbox({ onSelect, selectedCable }) {
+function Toolbox({ onSelect, selectedCable, onDrop }) {
   return (
-    <div className="toolbox">
+    <div
+      className="toolbox"
+      onDragOver={e => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      onDrop={e => {
+        const object = JSON.parse(e.dataTransfer.getData("object"));
+        onDrop(object);
+      }}
+    >
       {equipmentList.map(equipment => (
         <ToolboxItem equipmentType={equipment.type} key={equipment.type} />
       ))}

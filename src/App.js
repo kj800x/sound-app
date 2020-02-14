@@ -64,6 +64,9 @@ const reducer = (state, action) => {
         });
       }
     }
+    case "DELETE": {
+      return state.filter(obj => obj.id !== action.payload.id);
+    }
     default: {
       return state;
     }
@@ -87,7 +90,15 @@ function App() {
         selectedCableType={selectedCable}
       />
       <ItemEditor item={selectedItem} />
-      <Toolbox selectedCable={selectedCable} onSelect={setSelectedCable} />
+      <Toolbox
+        selectedCable={selectedCable}
+        onSelect={setSelectedCable}
+        onDrop={object => {
+          if (object.id !== "__NEW__") {
+            dispatch({ type: "DELETE", payload: { id: object.id } });
+          }
+        }}
+      />
     </div>
   );
 }

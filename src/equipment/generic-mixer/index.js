@@ -2,7 +2,7 @@ import "./generic-mixer.css";
 
 export default {
   type: "generic-mixer",
-  connectors: [
+  portGroups: [
     {
       location: [0.5, 0],
       connectors: {

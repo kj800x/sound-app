@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import "./App.css";
 
 import classNames from "classnames";
@@ -6,76 +6,16 @@ import classNames from "classnames";
 import Grid from "./grid/Grid";
 import Toolbox from "./toolbox/Toolbox";
 import ItemEditor from "./itemEditor/ItemEditor";
+import reducer, { initialState } from "./reducer";
 
-const INITIAL_SCENE = [
-  {
-    type: "generic-mic",
-    id: 0,
-    x: 1,
-    y: 1
-  },
-  {
-    type: "generic-mic",
-    id: 1,
-    x: 3,
-    y: 3
-  }
-];
-
-const nextId = state => {
-  return state.reduce((acc, obj) => (acc > obj.id ? acc : obj.id), 0) + 1;
-};
-
-const getSelectedItem = state => {
-  return state.find(item => item.selected);
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SELECT": {
-      return state.map(obj => ({
-        ...obj,
-        selected: obj.id === action.payload.id
-      }));
-    }
-    case "MOVE": {
-      if (action.payload.id === "__NEW__") {
-        console.log(action.payload.object);
-        return [
-          ...state,
-          {
-            ...action.payload.object,
-            id: nextId(state),
-            x: action.payload.pos[0],
-            y: action.payload.pos[1]
-          }
-        ];
-      } else {
-        return state.map(obj => {
-          if (obj.id === action.payload.id) {
-            return {
-              ...obj,
-              x: action.payload.pos[0],
-              y: action.payload.pos[1]
-            };
-          } else {
-            return obj;
-          }
-        });
-      }
-    }
-    case "DELETE": {
-      return state.filter(obj => obj.id !== action.payload.id);
-    }
-    default: {
-      return state;
-    }
-  }
+const getSelectedItem = scene => {
+  return scene.find(item => item.selected);
 };
 
 function App() {
-  const [scene, dispatch] = useReducer(reducer, INITIAL_SCENE);
-  const [selectedCable, setSelectedCable] = useState(undefined);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { scene: rawScene, selectedConnector, selectedCable } = state;
+  const scene = Object.values(rawScene);
 
   const selectedItem = getSelectedItem(scene);
 
@@ -88,11 +28,21 @@ function App() {
           dispatch({ type: "MOVE", payload: { id: object.id, pos, object } })
         }
         selectedCableType={selectedCable}
+        onConnectorPortClick={({ portGroupIndex, objectId }) => {
+          console.log({ portGroupIndex, objectId });
+          dispatch({
+            type: "SET_SELECTED_CONNECTOR",
+            payload: { selectedConnector: { portGroupIndex, objectId } }
+          });
+        }}
+        selectedConnector={selectedConnector}
       />
       <ItemEditor item={selectedItem} />
       <Toolbox
         selectedCable={selectedCable}
-        onSelect={setSelectedCable}
+        onSelect={selectedCable => {
+          dispatch({ type: "SET_SELECTED_CABLE", payload: { selectedCable } });
+        }}
         onDrop={object => {
           if (object.id !== "__NEW__") {
             dispatch({ type: "DELETE", payload: { id: object.id } });

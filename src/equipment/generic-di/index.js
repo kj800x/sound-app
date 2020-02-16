@@ -2,7 +2,7 @@ import "./generic-di.css";
 
 export default {
   type: "generic-di",
-  connectors: [
+  portGroups: [
     {
       location: [0.2, 0.2],
       connectors: {

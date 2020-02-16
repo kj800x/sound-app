@@ -3,12 +3,21 @@ import classnames from "classnames";
 import "./SceneObject.css";
 import equipmentList from "../equipment";
 import cabling from "../cabling";
+import classNames from "classnames";
 
 // Right now the graphs are very basic
 const getSceneObjectsFromSceneGraph = graph => graph;
 
-function Connector({ connectorDetails, selectedCableType, zoom }) {
-  const showConnector = Object.values(connectorDetails.connectors).includes(
+function Connector({
+  portGroup,
+  portGroupIndex,
+  selectedCableType,
+  zoom,
+  onClick,
+  selectedConnector,
+  objectId
+}) {
+  const showConnector = Object.values(portGroup.connectors).includes(
     selectedCableType
   );
 
@@ -16,19 +25,29 @@ function Connector({ connectorDetails, selectedCableType, zoom }) {
     return null;
   }
 
-  const connectorLocation = connectorDetails.location;
+  const selected =
+    selectedConnector &&
+    selectedConnector.objectId === objectId &&
+    selectedConnector.portGroupIndex === portGroupIndex;
+
+  const connectorLocation = portGroup.location;
 
   const cableSkel = cabling.find(cable => cable.type === selectedCableType);
 
   return (
     <div
-      className="cable-connector"
+      className={classNames("cable-connector", { selected })}
       style={{
         left: connectorLocation[0] * zoom,
         top: connectorLocation[1] * zoom,
         backgroundColor: cableSkel.color,
         width: 0.2 * zoom,
         height: 0.2 * zoom
+      }}
+      onClick={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick({ portGroupIndex, objectId });
       }}
     />
   );
@@ -39,7 +58,9 @@ export const SceneObject = ({
   gtom,
   zoom,
   onSelect,
-  selectedCableType
+  onConnectorClick,
+  selectedCableType,
+  selectedConnector
 }) => {
   const skel = equipmentList.find(e => e.type === object.type);
 
@@ -70,19 +91,31 @@ export const SceneObject = ({
         onSelect(object.id);
       }}
     >
-      {skel.connectors.map((connector, i) => (
+      {skel.portGroups.map((portGroup, i) => (
         <Connector
           key={i}
           zoom={zoom}
           selectedCableType={selectedCableType}
-          connectorDetails={connector}
+          portGroup={portGroup}
+          portGroupIndex={i}
+          objectId={object.id}
+          onClick={onConnectorClick}
+          selectedConnector={selectedConnector}
         />
       ))}
     </div>
   );
 };
 
-const SceneObjects = ({ scene, gtom, zoom, onSelect, selectedCableType }) => {
+const SceneObjects = ({
+  scene,
+  gtom,
+  zoom,
+  onSelect,
+  selectedCableType,
+  onConnectorPortClick,
+  selectedConnector
+}) => {
   const objects = getSceneObjectsFromSceneGraph(scene);
 
   return (
@@ -95,6 +128,8 @@ const SceneObjects = ({ scene, gtom, zoom, onSelect, selectedCableType }) => {
           zoom={zoom}
           onSelect={onSelect}
           selectedCableType={selectedCableType}
+          onConnectorClick={onConnectorPortClick}
+          selectedConnector={selectedConnector}
         />
       ))}
     </>

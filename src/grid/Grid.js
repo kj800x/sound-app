@@ -4,7 +4,14 @@ import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
 import "./Grid.css";
 
-const Grid = ({ scene, onSelect, onDrop, selectedCableType }) => {
+const Grid = ({
+  scene,
+  onSelect,
+  onDrop,
+  selectedCableType,
+  onConnectorPortClick,
+  selectedConnector
+}) => {
   // In ln(pixel coords)
   const [zoomRaw, setZoomRaw] = useState(Math.log(70));
   // In grid coords
@@ -87,6 +94,8 @@ const Grid = ({ scene, onSelect, onDrop, selectedCableType }) => {
           zoom={zoom}
           onSelect={onSelect}
           selectedCableType={selectedCableType}
+          onConnectorPortClick={onConnectorPortClick}
+          selectedConnector={selectedConnector}
         />
       </div>
     </div>

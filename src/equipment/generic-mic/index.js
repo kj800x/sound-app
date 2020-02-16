@@ -2,7 +2,7 @@ import "./generic-mic.css";
 
 export default {
   type: "generic-mic",
-  connectors: [
+  portGroups: [
     {
       location: [0.5, 1],
       connectors: {

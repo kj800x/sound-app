@@ -50,7 +50,8 @@ const reducer = (state, action) =>
         if (draft.selectedConnector) {
           draft.connections.push({
             from: draft.selectedConnector,
-            to: action.payload.selectedConnector
+            to: action.payload.selectedConnector,
+            type: draft.selectedCable
           });
           draft.selectedConnector = undefined;
           return;

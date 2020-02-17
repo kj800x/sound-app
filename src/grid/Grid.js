@@ -2,10 +2,12 @@ import React, { useState, useRef } from "react";
 import GridDots from "./GridDots";
 import useGlobalMouse from "./useGlobalMouse";
 import SceneObjects from "./SceneObjects";
+import Wires from "./Wires";
 import "./Grid.css";
 
 const Grid = ({
   scene,
+  wires,
   onSelect,
   onDrop,
   selectedCableType,
@@ -88,6 +90,7 @@ const Grid = ({
           y={yOffset}
           zoom={zoom}
         />
+        <Wires xOffset={xOffset} yOffset={yOffset} zoom={zoom} wires={wires} />
         <SceneObjects
           gtom={gtom}
           scene={scene}
